@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.Objects;
 
 public class UsefulMaterial {
     private int id;
@@ -39,11 +40,8 @@ public class UsefulMaterial {
         this.link = link;
     }
 
-    public UsefulMaterial() {
-
-    }
-    public UsefulMaterial(int identifier, String name, String description, String link){
-        setId(identifier);
+    public UsefulMaterial(int id, String name, String description, String link){
+        setId(id);
         setName(name);
         setDescription(description);
         setLink(link);
@@ -53,4 +51,20 @@ public class UsefulMaterial {
         return ("ID: " + id + "\nName: " + name
                 + "\nDescription: " + description + "\nLink: " + link + "\n");
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        UsefulMaterial material = (UsefulMaterial) obj;
+        return id == material.id && name.equals(material.name)
+                && description.equals(material.description) && link.equals(material.link);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, link);
+    }
+
 }

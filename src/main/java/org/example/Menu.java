@@ -7,7 +7,6 @@ import java.util.Scanner;
 public class Menu {
     static Scanner in = new Scanner(System.in);
     int choice;
-
     String menuDescription = "1. Вывод записи по ID.\n2. Поиск записей по части имени.\n3. Выход\nВведите число: ";
 
     public void start(Storage storage) {
@@ -45,5 +44,4 @@ public class Menu {
         } else
             System.out.println("Не найдено результатов\n");
     }
-
 }

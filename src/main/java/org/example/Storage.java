@@ -12,10 +12,6 @@ public class Storage {
         return materials;
     }
 
-    public Storage() {
-        materials = Reader.read("src/main/resources/data.json");
-    }
-
     public Storage(Map<Integer, UsefulMaterial> materials) {
         this.materials = materials;
     }
