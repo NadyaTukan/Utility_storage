@@ -18,6 +18,7 @@ public class Storage {
 
     public Storage(String pathToData) {
         materials = Reader.read(pathToData);
+
     }
 
     public String searchByID(int id){
