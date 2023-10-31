@@ -19,8 +19,10 @@ public class StorageTest {
 
     @Test
     void addInStorage() {
-        //Act
+        //Arrange
         Map<Integer, UsefulMaterial> materialsTest = Reader.read("./src/test/java/dataTest.json");
+
+        //Act
         Storage storageExpect = new Storage(materialsTest);
 
         //Assert
@@ -28,13 +30,19 @@ public class StorageTest {
     }
 
     @Test
-    void searchByIDTest() {
+    void searchByIDWithNonZeroResultsTest() {
         //Act
         var resultExistingID  =  storageTest.searchByID(1);
-        var resultUnExistingID = storageTest.searchByID(100);
 
         //Assert
         assertEquals(resultExistingID, storageTest.getMaterials().get(1).getInfo());
+    }
+
+    void searchByIDWithZeroResultsTest() {
+        //Act
+        var resultUnExistingID = storageTest.searchByID(100);
+
+        //Assert
         assertNull(resultUnExistingID);
     }
 
