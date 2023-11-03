@@ -1,9 +1,12 @@
 package org.example;
 
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
+@Component
 public class Menu {
     static Scanner in = new Scanner(System.in);
     int choice;
@@ -13,12 +16,15 @@ public class Menu {
         System.out.print(menuDescription);
         choice = in.nextInt();
         while (true) {
-            switch (choice){
-                case 1: outputMaterialByID(storage);
-                        start(storage);
-                case 2: outputMaterialByPartOfName(storage);
-                        start(storage);
-                case 3: System.exit(1);
+            switch (choice) {
+                case 1:
+                    outputMaterialByID(storage);
+                    start(storage);
+                case 2:
+                    outputMaterialByPartOfName(storage);
+                    start(storage);
+                case 3:
+                    System.exit(1);
             }
             System.out.println("Неверное число\n");
             System.out.print(menuDescription);
@@ -38,8 +44,8 @@ public class Menu {
         String partOfName = in.next();
         ArrayList<UsefulMaterial> results = storage.searchByPartOfName(partOfName);
         if (!results.isEmpty()) {
-            for (UsefulMaterial result: results) {
-                System.out.println(result.getInfo());
+            for (UsefulMaterial result : results) {
+                System.out.println(result.toString());
             }
         } else
             System.out.println("Не найдено результатов\n");

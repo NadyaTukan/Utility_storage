@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class StorageTest {
@@ -14,7 +15,7 @@ public class StorageTest {
 
     @BeforeEach
     public void createNewStorage() {
-       storageTest = new Storage("./src/test/java/dataTest.json");
+        storageTest = new Storage("./src/test/java/dataTest.json");
     }
 
     @Test
@@ -23,7 +24,8 @@ public class StorageTest {
         Map<Integer, UsefulMaterial> materialsTest = Reader.read("./src/test/java/dataTest.json");
 
         //Act
-        Storage storageExpect = new Storage(materialsTest);
+
+        Storage storageExpect = new Storage("src/test/resources/dataTest.json");
 
         //Assert
         assertEquals(materialsTest, storageExpect.getMaterials());
@@ -32,12 +34,13 @@ public class StorageTest {
     @Test
     void searchByIDWithNonZeroResultsTest() {
         //Act
-        var resultExistingID  =  storageTest.searchByID(1);
+        var resultExistingID = storageTest.searchByID(1);
 
         //Assert
-        assertEquals(resultExistingID, storageTest.getMaterials().get(1).getInfo());
+        assertEquals(resultExistingID, storageTest.getMaterials().get(1).toString());
     }
 
+    @Test
     void searchByIDWithZeroResultsTest() {
         //Act
         var resultUnExistingID = storageTest.searchByID(100);
@@ -53,7 +56,7 @@ public class StorageTest {
         expectList.add(new UsefulMaterial(1, "book1", "book1", "book1"));
 
         //Act
-        var resultPartOfNameExisting  =  storageTest.searchByPartOfName("book1");
+        var resultPartOfNameExisting = storageTest.searchByPartOfName("book1");
 
         //Assert
         assertEquals(expectList, resultPartOfNameExisting);

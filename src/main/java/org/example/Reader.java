@@ -1,28 +1,27 @@
 package org.example;
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
-import java.io.File;
-import java.io.FileNotFoundException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NonNull;
+
 import java.io.FileReader;
-import java.lang.reflect.Type;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
+
 public class Reader {
-    public static Map<Integer, UsefulMaterial> read(String pathToData) {
-        Type itemsMapType = new TypeToken<Map<Integer, UsefulMaterial>>() {}.getType();
+    public static Map<Integer, UsefulMaterial> read(@NonNull String pathToData) {
+        ObjectMapper mapper = new ObjectMapper();
+        TypeReference<HashMap<Integer, UsefulMaterial>> itemsMapType = new TypeReference<>() {
+        };
         Map<Integer, UsefulMaterial> materials;
         try {
-            materials = new Gson().fromJson(new FileReader(pathToData), itemsMapType);
-        } catch (FileNotFoundException e) {
+            materials = mapper.readValue(new FileReader(pathToData), itemsMapType);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return materials;
     }
 
-    public static boolean isRightPath (String pathToData) {
-        File file = new File(pathToData);
-        return file.exists() && pathToData.endsWith(".json");
-
-    }
 }
