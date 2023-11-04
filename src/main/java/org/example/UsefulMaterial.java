@@ -1,13 +1,11 @@
 package org.example;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode
 
 public class UsefulMaterial {
@@ -15,7 +13,6 @@ public class UsefulMaterial {
     private String name;
     private String description;
     private String link;
-
 
     @Override
     public String toString() {

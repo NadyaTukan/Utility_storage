@@ -8,11 +8,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class AppRunner implements CommandLineRunner {
 
-    private Storage storage = new Storage();
+    private final Menu menu;
 
     @Override
     public void run(String... args) {
-        Menu menu = new Menu();
-        menu.start(storage);
+        menu.start();
     }
 }
