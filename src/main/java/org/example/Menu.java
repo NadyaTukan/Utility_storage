@@ -1,29 +1,34 @@
 package org.example;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
+@Component
+@RequiredArgsConstructor
 public class Menu {
-    static Scanner in = new Scanner(System.in);
-    int choice;
+
+    private final Storage storage;
+    private final Scanner in = new Scanner(System.in);
     String menuDescription = "1. Вывод записи по ID.\n2. Поиск записей по части имени.\n3. Выход\nВведите число: ";
 
-    public void start(Storage storage) {
-        System.out.print(menuDescription);
-        choice = in.nextInt();
-        while (true) {
-            switch (choice){
-                case 1: outputMaterialByID(storage);
-                        start(storage);
-                case 2: outputMaterialByPartOfName(storage);
-                        start(storage);
-                case 3: System.exit(1);
-            }
-            System.out.println("Неверное число\n");
+    public void start() {
+        int choice;
+        do {
             System.out.print(menuDescription);
             choice = in.nextInt();
-        }
+            switch (choice) {
+                case 1 -> outputMaterialByID(storage);
+                case 2 -> outputMaterialByPartOfName(storage);
+                case 3 -> {
+                    return;
+                }
+                default -> System.out.println("Неверное число!\n");
+            }
+        } while (true);
     }
 
     private void outputMaterialByID(Storage storage) {
@@ -38,8 +43,8 @@ public class Menu {
         String partOfName = in.next();
         ArrayList<UsefulMaterial> results = storage.searchByPartOfName(partOfName);
         if (!results.isEmpty()) {
-            for (UsefulMaterial result: results) {
-                System.out.println(result.getInfo());
+            for (UsefulMaterial result : results) {
+                System.out.println(result.toString());
             }
         } else
             System.out.println("Не найдено результатов\n");

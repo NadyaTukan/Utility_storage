@@ -1,37 +1,44 @@
 package org.example;
 
+import jakarta.annotation.PostConstruct;
+import lombok.Getter;
+import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
+@Component
+@Getter
 public class Storage {
 
     //преполагается, что ключ Map совпадает с полем ID объекта класса UsefulMaterial
-    Map<Integer, UsefulMaterial> materials;
+    private final Map<Integer, UsefulMaterial> materials = new HashMap<>();
 
-    public Map<Integer, UsefulMaterial> getMaterials() {
-        return materials;
+    private final String pathToData;
+
+    public Storage(@Value("${data.name}") String pathToData) {
+        this.pathToData = pathToData;
     }
 
-    public Storage(Map<Integer, UsefulMaterial> materials) {
-        this.materials = materials;
+    @PostConstruct
+    public void init() {
+        materials.putAll(Reader.read(pathToData));
     }
 
-    public Storage(String pathToData) {
-        materials = Reader.read(pathToData);
-
-    }
-
-    public String searchByID(int id){
+    public String searchByID(@NonNull Integer id) {
         if (materials.containsKey(id))
-            return materials.get(id).getInfo();
+            return materials.get(id).toString();
         else
             return null;
     }
 
-    public ArrayList<UsefulMaterial> searchByPartOfName(String partOfName) {
+    public ArrayList<UsefulMaterial> searchByPartOfName(@NonNull String partOfName) {
         ArrayList<UsefulMaterial> results = new ArrayList<>();
-        for (Map.Entry<Integer, UsefulMaterial> material: materials.entrySet()) {
-            if(material.getValue().getName().contains(partOfName.toLowerCase()))
+        for (Map.Entry<Integer, UsefulMaterial> material : materials.entrySet()) {
+            if (material.getValue().getName().toLowerCase().contains(partOfName.toLowerCase()))
                 results.add(material.getValue());
         }
         return results;
