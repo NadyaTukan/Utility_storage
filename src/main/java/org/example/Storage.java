@@ -1,5 +1,6 @@
 package org.example;
 
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,11 +17,15 @@ public class Storage {
     //преполагается, что ключ Map совпадает с полем ID объекта класса UsefulMaterial
     private final Map<Integer, UsefulMaterial> materials = new HashMap<>();
 
-    private String pathToData;
+    private final String pathToData;
 
     public Storage(@Value("${data.name}") String pathToData) {
-        materials.putAll(Reader.read(pathToData));
+        this.pathToData = pathToData;
+    }
 
+    @PostConstruct
+    public void init() {
+        materials.putAll(Reader.read(pathToData));
     }
 
     public String searchByID(@NonNull Integer id) {

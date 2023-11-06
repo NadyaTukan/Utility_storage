@@ -12,11 +12,11 @@ import java.util.Scanner;
 public class Menu {
 
     private final Storage storage;
-    static Scanner in = new Scanner(System.in);
-    int choice;
+    private final Scanner in = new Scanner(System.in);
     String menuDescription = "1. Вывод записи по ID.\n2. Поиск записей по части имени.\n3. Выход\nВведите число: ";
 
     public void start() {
+        int choice;
         do {
             System.out.print(menuDescription);
             choice = in.nextInt();

@@ -22,15 +22,17 @@ public class StorageTest {
     public void createNewStorage() throws IOException {
         File testFile = stateFile.getFile();
         storage = new Storage(testFile.getPath());
+        storage.init();
     }
 
     @Test
-    void addInStorage() {
+    void addInStorage() throws IOException {
         //Arrange
-        Map<Integer, UsefulMaterial> materialsTest = Reader.read("./src/test/resources/dataTest.json");
+        Map<Integer, UsefulMaterial> materialsTest = Reader.read(stateFile.getFile().getPath());
 
         //Act
-        Storage storageExpect = new Storage("./src/test/resources/dataTest.json");
+        Storage storageExpect = new Storage(stateFile.getFile().getPath());
+        storageExpect.init();
 
         //Assert
         assertEquals(materialsTest, storageExpect.getMaterials());
@@ -59,9 +61,11 @@ public class StorageTest {
         //Arrange
         ArrayList<UsefulMaterial> expectList = new ArrayList<>();
         expectList.add(new UsefulMaterial(1, "Testbook1", "book1", "book1"));
+        expectList.add(new UsefulMaterial(2, "Testbook2", "book2", "book2"));
+        expectList.add(new UsefulMaterial(3, "Testbook3", "book3", "book3"));
 
         //Act
-        var resultPartOfNameExisting = storage.searchByPartOfName("Testbook1");
+        var resultPartOfNameExisting = storage.searchByPartOfName("Test");
 
         //Assert
         assertEquals(expectList, resultPartOfNameExisting);
