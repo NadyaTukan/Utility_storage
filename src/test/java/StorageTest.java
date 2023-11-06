@@ -1,5 +1,3 @@
-package org.example;
-
 import org.example.model.UsefulMaterial;
 import org.example.reader.Reader;
 import org.example.storage.Storage;
