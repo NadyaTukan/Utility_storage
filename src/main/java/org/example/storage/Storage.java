@@ -1,7 +1,7 @@
 package org.example.storage;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NonNull;
 import org.example.model.UsefulMaterial;
@@ -12,19 +12,23 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Getter
 @Component
 public class Storage {
 
     private final Map<Long, UsefulMaterial> materials = new HashMap<>();
+    private final String pathToData;
     private Long nextId = 0L;
 
     public Storage(@Value("${data.name}") String pathToData) {
+        this.pathToData = pathToData;
+    }
+
+    @PostConstruct
+    public void init() {
         materials.putAll(Reader.read(pathToData));
         nextId = getMaxId();
-
     }
 
     public UsefulMaterial create(UsefulMaterial material) {
@@ -53,14 +57,21 @@ public class Storage {
     }
 
     public List<UsefulMaterial> searchByPartOfName(@NotBlank String partOfName) {
-        return materials.values()
+        List<UsefulMaterial> results = materials.values()
                 .stream()
-                .filter(material -> material.getName().toLowerCase().contains(partOfName.toLowerCase()))
-                .collect(Collectors.toList());
+                .filter(material -> material.getName()
+                        .toLowerCase()
+                        .contains(partOfName.toLowerCase()))
+                .toList();
+        if (!results.isEmpty()) {
+            return results;
+        } else {
+            return null;
+        }
     }
 
     public Long getMaxId() {
-        long maxId =0L;
+        long maxId = 0L;
         for (Map.Entry<Long, UsefulMaterial> material : materials.entrySet()) {
             if (material.getValue().getId() > maxId)
                 maxId = material.getValue().getId();

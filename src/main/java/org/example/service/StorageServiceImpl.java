@@ -1,6 +1,5 @@
 package org.example.service;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.exception.NotFoundException;
 import org.example.exception.NullPointerException;
