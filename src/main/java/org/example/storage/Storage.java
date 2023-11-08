@@ -71,12 +71,7 @@ public class Storage {
     }
 
     public Long getMaxId() {
-        long maxId = 0L;
-        for (Map.Entry<Long, UsefulMaterial> material : materials.entrySet()) {
-            if (material.getValue().getId() > maxId)
-                maxId = material.getValue().getId();
-        }
-        return maxId;
+        return materials.keySet() .stream() .max(Long::compareTo) .orElse(0L);
     }
 
     public Long getNextId() {

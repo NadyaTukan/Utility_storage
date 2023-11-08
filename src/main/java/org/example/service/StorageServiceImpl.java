@@ -1,10 +1,12 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.api.messages.dto.UpdateMaterialDto;
 import org.example.exception.NotFoundException;
 import org.example.exception.NullPointerException;
 import org.example.model.UsefulMaterial;
 import org.example.service.argument.CreateMaterialArgument;
+import org.example.service.argument.UpdateMaterialArgument;
 import org.example.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,20 +33,21 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public UsefulMaterial deleteById(Long id) {
-        return Optional.ofNullable(storage.delete(id))
+    public void deleteById(Long id) {
+        Optional.ofNullable(storage.delete(id))
                 .orElseThrow(() -> new NotFoundException("Материал не найден."));
     }
 
     @Override
-    public UsefulMaterial updateByID(Long id, CreateMaterialArgument argument) {
-        return Optional.ofNullable(storage.update(id, UsefulMaterial.builder()
+    public UsefulMaterial updateByID(Long id, UpdateMaterialArgument argument) {
+        Optional.ofNullable(storage.update(id, UsefulMaterial.builder()
                                                                     .id(id)
                                                                     .name(argument.getName())
                                                                     .description(argument.getDescription())
                                                                     .link(argument.getLink())
                                                                     .build()))
                 .orElseThrow(() -> new NullPointerException("Материал не найден."));
+        return null;
     }
 
     @Override

@@ -5,7 +5,14 @@ import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.example.api.ErrorDto;
 import org.example.api.messages.dto.CreateMaterialDto;
 import org.example.api.messages.dto.MaterialDto;
+import org.example.api.messages.dto.UpdateMaterialDto;
+import org.example.api.messages.mapper.MaterialMapper;
+import org.example.model.UsefulMaterial;
+import org.example.storage.Storage;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -22,11 +29,19 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebTestClient
 @ExtendWith(SoftAssertionsExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class StorageControllerIT {
     @Autowired
     private WebTestClient webTestClient;
 
+    @Autowired
+    private Storage storage;
+
+    @Autowired
+    private MaterialMapper mapper;
+
     @Test
+    @Order(1)
     void postCreate(SoftAssertions assertions) {
         //Arrange
         MaterialDto material = MaterialDto.builder()
@@ -64,33 +79,22 @@ class StorageControllerIT {
     }
 
     @Test
+    @Order(2)
     void deleteDeleteIsOk(SoftAssertions assertions) {
 
         //Act
-        MaterialDto responce = webTestClient.delete()
-                .uri("materials/5")
+        webTestClient.delete()
+                .uri("materials/6")
                 .exchange()
                 .expectStatus()
-                .isOk()
-                .expectBody(MaterialDto.class)
-                .returnResult()
-                .getResponseBody();
+                .isOk();
 
         //Assert
-        MaterialDto expectedDto = MaterialDto.builder()
-                .id(5L)
-                .name("book5")
-                .description("book5")
-                .link("book5")
-                .build();
-
-        assertions.assertThat(responce)
-                .usingRecursiveComparison()
-                .withStrictTypeChecking()
-                .isEqualTo(expectedDto);
+        assertions.assertThat(storage.searchByID(6L)).isEqualTo(null);
     }
 
     @Test
+    @Order(3)
     void deleteDeleteNotFound(SoftAssertions assertions) {
 
         //Act
@@ -115,7 +119,8 @@ class StorageControllerIT {
     }
 
     @Test
-    void putUpdateByIDIsOk(SoftAssertions assertions) {
+    @Order(4)
+    void postUpdateByIDIsOk(SoftAssertions assertions) {
         //Arrange
         MaterialDto material = MaterialDto.builder()
                 .name("newbook4")
@@ -123,19 +128,18 @@ class StorageControllerIT {
                 .link("newbook4")
                 .build();
 
-        CreateMaterialDto dto = new CreateMaterialDto(material.getName(), material.getDescription(), material.getLink());
+        CreateMaterialDto dto = new CreateMaterialDto(material.getName(),
+                                                    material.getDescription(),
+                                                    material.getLink());
 
         //Act
-        MaterialDto responce = webTestClient.put()
-                .uri("materials/4")
+        webTestClient.post()
+                .uri("materials/4/update")
                 .contentType(APPLICATION_JSON)
                 .bodyValue(dto)
                 .exchange()
                 .expectStatus()
-                .isOk()
-                .expectBody(MaterialDto.class)
-                .returnResult()
-                .getResponseBody();
+                .isOk();
 
         //Assert
         MaterialDto expectedDto = MaterialDto.builder()
@@ -145,14 +149,17 @@ class StorageControllerIT {
                 .link("newbook4")
                 .build();
 
-        assertions.assertThat(responce)
+        MaterialDto postedMaterial = mapper.toDto(storage.searchByID(4L));
+
+        assertions.assertThat(postedMaterial)
                 .usingRecursiveComparison()
                 .withStrictTypeChecking()
                 .isEqualTo(expectedDto);
     }
 
     @Test
-    void putUpdateByIDNotFound(SoftAssertions assertions) {
+    @Order(5)
+    void postUpdateByIDNotFound(SoftAssertions assertions) {
         //Arrange
         MaterialDto material = MaterialDto.builder()
                 .name("newbook100")
@@ -163,8 +170,8 @@ class StorageControllerIT {
         CreateMaterialDto dto = new CreateMaterialDto(material.getName(), material.getDescription(), material.getLink());
 
         //Act
-        ErrorDto responce = webTestClient.put()
-                .uri("materials/100")
+        ErrorDto responce = webTestClient.post()
+                .uri("materials/100/update")
                 .contentType(APPLICATION_JSON)
                 .bodyValue(dto)
                 .exchange()
@@ -186,6 +193,7 @@ class StorageControllerIT {
     }
 
     @Test
+    @Order(6)
     void getByIDIsOk(SoftAssertions assertions) {
 
         //Act
@@ -213,6 +221,7 @@ class StorageControllerIT {
     }
 
     @Test
+    @Order(7)
     void getByIDNotFound(SoftAssertions assertions) {
 
         //Act
@@ -237,11 +246,12 @@ class StorageControllerIT {
     }
 
     @Test
+    @Order(8)
     void getSearchIsOk(SoftAssertions assertions) {
 
         //Act
         List<MaterialDto> responce = webTestClient.get()
-                .uri("materials/search/Testbook")
+                .uri("materials/search/?partOfName=Testbook")
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -277,11 +287,12 @@ class StorageControllerIT {
     }
 
     @Test
+    @Order(9)
     void getSearchNotFound(SoftAssertions assertions) {
 
         //Act
         List<ErrorDto> responce = webTestClient.get()
-                .uri("materials/search/Testbook100")
+                .uri("materials/search/?partOfName=Testbook100")
                 .exchange()
                 .expectStatus()
                 .isNotFound()
