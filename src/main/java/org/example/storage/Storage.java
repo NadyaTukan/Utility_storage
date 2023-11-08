@@ -58,11 +58,11 @@ public class Storage {
 
     public List<UsefulMaterial> searchByPartOfName(@NotBlank String partOfName) {
         List<UsefulMaterial> results = materials.values()
-                .stream()
-                .filter(material -> material.getName()
-                        .toLowerCase()
-                        .contains(partOfName.toLowerCase()))
-                .toList();
+                                                .stream()
+                                                .filter(material -> material.getName()
+                                                                            .toLowerCase()
+                                                                            .contains(partOfName.toLowerCase()))
+                                                .toList();
         if (!results.isEmpty()) {
             return results;
         } else {
@@ -71,7 +71,10 @@ public class Storage {
     }
 
     public Long getMaxId() {
-        return materials.keySet() .stream() .max(Long::compareTo) .orElse(0L);
+        return materials.keySet()
+                        .stream()
+                        .max(Long::compareTo)
+                        .orElse(0L);
     }
 
     public Long getNextId() {

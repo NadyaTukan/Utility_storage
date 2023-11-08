@@ -24,11 +24,11 @@ public class StorageServiceImpl implements StorageService {
     public UsefulMaterial create(CreateMaterialArgument argument) {
         long id = storage.getNextId();
         return storage.create(UsefulMaterial.builder()
-                .id(id)
-                .name(argument.getName())
-                .description(argument.getDescription())
-                .link(argument.getLink())
-                .build());
+                                            .id(id)
+                                            .name(argument.getName())
+                                            .description(argument.getDescription())
+                                            .link(argument.getLink())
+                                            .build());
     }
 
     @Override
@@ -39,25 +39,24 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public UsefulMaterial updateByID(Long id, UpdateMaterialArgument argument) {
-        Optional.ofNullable(storage.update(id, UsefulMaterial.builder()
-                        .id(id)
-                        .name(argument.getName())
-                        .description(argument.getDescription())
-                        .link(argument.getLink())
-                        .build()))
-                .orElseThrow(() -> new NullPointerException("Материал не найден."));
-        return null;
+        return Optional.ofNullable(storage.update(id, UsefulMaterial.builder()
+                                                                    .id(id)
+                                                                    .name(argument.getName())
+                                                                    .description(argument.getDescription())
+                                                                    .link(argument.getLink())
+                                                                    .build()))
+                       .orElseThrow(() -> new NullPointerException("Материал не найден."));
     }
 
     @Override
     public UsefulMaterial searchByID(Long id) {
         return Optional.ofNullable(storage.searchByID(id))
-                .orElseThrow(() -> new NotFoundException("Материал не найден."));
+                       .orElseThrow(() -> new NotFoundException("Материал не найден."));
     }
 
     @Override
     public List<UsefulMaterial> searchByPartOfName(String partOfName) {
         return Optional.ofNullable(storage.searchByPartOfName(partOfName))
-                .orElseThrow(() -> new NotFoundException("Материал не найден."));
+                       .orElseThrow(() -> new NotFoundException("Материал не найден."));
     }
 }

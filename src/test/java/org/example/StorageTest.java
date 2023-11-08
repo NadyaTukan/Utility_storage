@@ -64,23 +64,23 @@ public class StorageTest {
         //Arrange
         ArrayList<UsefulMaterial> expectList = new ArrayList<>();
         expectList.add(UsefulMaterial.builder()
-                .id(1L)
-                .name("Testbook1")
-                .description("book1")
-                .link("book1")
-                .build());
+                                     .id(1L)
+                                     .name("Testbook1")
+                                     .description("book1")
+                                     .link("book1")
+                                     .build());
         expectList.add(UsefulMaterial.builder()
-                .id(2L)
-                .name("Testbook2")
-                .description("book2")
-                .link("book2")
-                .build());
+                                     .id(2L)
+                                     .name("Testbook2")
+                                     .description("book2")
+                                     .link("book2")
+                                     .build());
         expectList.add(UsefulMaterial.builder()
-                .id(3L)
-                .name("Testbook3")
-                .description("book3")
-                .link("book3")
-                .build());
+                                     .id(3L)
+                                     .name("Testbook3")
+                                     .description("book3")
+                                     .link("book3")
+                                     .build());
 
         //Act
         var resultPartOfNameExisting = storage.searchByPartOfName("Test");

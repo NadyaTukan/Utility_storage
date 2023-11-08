@@ -43,37 +43,38 @@ class StorageControllerIT {
     void postCreate(SoftAssertions assertions) {
         //Arrange
         MaterialDto material = MaterialDto.builder()
-                .name("book6")
-                .description("book6")
-                .link("book6")
-                .build();
+                                          .name("book6")
+                                          .description("book6")
+                                          .link("book6")
+                                          .build();
 
-        CreateMaterialDto dto = new CreateMaterialDto(material.getName(), material.getDescription(), material.getLink());
+        CreateMaterialDto dto = new CreateMaterialDto(material.getName(), material.getDescription(),
+                material.getLink());
 
         //Act
         MaterialDto responce = webTestClient.post()
-                .uri("materials/create")
-                .contentType(APPLICATION_JSON)
-                .bodyValue(dto)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody(MaterialDto.class)
-                .returnResult()
-                .getResponseBody();
+                                            .uri("materials/create")
+                                            .contentType(APPLICATION_JSON)
+                                            .bodyValue(dto)
+                                            .exchange()
+                                            .expectStatus()
+                                            .isOk()
+                                            .expectBody(MaterialDto.class)
+                                            .returnResult()
+                                            .getResponseBody();
 
         //Assert
         MaterialDto expectedDto = MaterialDto.builder()
-                .id(6L)
-                .name("book6")
-                .description("book6")
-                .link("book6")
-                .build();
+                                             .id(6L)
+                                             .name("book6")
+                                             .description("book6")
+                                             .link("book6")
+                                             .build();
 
         assertions.assertThat(responce)
-                .usingRecursiveComparison()
-                .withStrictTypeChecking()
-                .isEqualTo(expectedDto);
+                  .usingRecursiveComparison()
+                  .withStrictTypeChecking()
+                  .isEqualTo(expectedDto);
     }
 
     @Test
@@ -82,10 +83,10 @@ class StorageControllerIT {
 
         //Act
         webTestClient.delete()
-                .uri("materials/6")
-                .exchange()
-                .expectStatus()
-                .isOk();
+                     .uri("materials/6")
+                     .exchange()
+                     .expectStatus()
+                     .isOk();
 
         //Assert
         assertions.assertThat(storage.searchByID(6L)).isEqualTo(null);
@@ -97,23 +98,23 @@ class StorageControllerIT {
 
         //Act
         ErrorDto responce = webTestClient.delete()
-                .uri("materials/100")
-                .exchange()
-                .expectStatus()
-                .isNotFound()
-                .expectBody(ErrorDto.class)
-                .returnResult()
-                .getResponseBody();
+                                         .uri("materials/100")
+                                         .exchange()
+                                         .expectStatus()
+                                         .isNotFound()
+                                         .expectBody(ErrorDto.class)
+                                         .returnResult()
+                                         .getResponseBody();
 
         //Assert
         ErrorDto expectedDto = ErrorDto.builder()
-                .errorMessage("Материал не найден.")
-                .build();
+                                       .errorMessage("Материал не найден.")
+                                       .build();
 
         assertions.assertThat(responce)
-                .usingRecursiveComparison()
-                .withStrictTypeChecking()
-                .isEqualTo(expectedDto);
+                  .usingRecursiveComparison()
+                  .withStrictTypeChecking()
+                  .isEqualTo(expectedDto);
     }
 
     @Test
@@ -121,38 +122,39 @@ class StorageControllerIT {
     void postUpdateByIDIsOk(SoftAssertions assertions) {
         //Arrange
         MaterialDto material = MaterialDto.builder()
-                .name("newbook4")
-                .description("newbook4")
-                .link("newbook4")
-                .build();
+                                          .name("newbook4")
+                                          .description("newbook4")
+                                          .link("newbook4")
+                                          .build();
 
         CreateMaterialDto dto = new CreateMaterialDto(material.getName(),
                 material.getDescription(),
                 material.getLink());
 
         //Act
-        webTestClient.post()
-                .uri("materials/4/update")
-                .contentType(APPLICATION_JSON)
-                .bodyValue(dto)
-                .exchange()
-                .expectStatus()
-                .isOk();
+        MaterialDto responce = webTestClient.post()
+                                            .uri("materials/4/update")
+                                            .contentType(APPLICATION_JSON)
+                                            .bodyValue(dto)
+                                            .exchange()
+                                            .expectStatus()
+                                            .isOk()
+                                            .expectBody(MaterialDto.class)
+                                            .returnResult()
+                                            .getResponseBody();
 
         //Assert
         MaterialDto expectedDto = MaterialDto.builder()
-                .id(4L)
-                .name("newbook4")
-                .description("newbook4")
-                .link("newbook4")
-                .build();
+                                             .id(4L)
+                                             .name("newbook4")
+                                             .description("newbook4")
+                                             .link("newbook4")
+                                             .build();
 
-        MaterialDto postedMaterial = mapper.toDto(storage.searchByID(4L));
-
-        assertions.assertThat(postedMaterial)
-                .usingRecursiveComparison()
-                .withStrictTypeChecking()
-                .isEqualTo(expectedDto);
+        assertions.assertThat(responce)
+                  .usingRecursiveComparison()
+                  .withStrictTypeChecking()
+                  .isEqualTo(expectedDto);
     }
 
     @Test
@@ -160,34 +162,35 @@ class StorageControllerIT {
     void postUpdateByIDNotFound(SoftAssertions assertions) {
         //Arrange
         MaterialDto material = MaterialDto.builder()
-                .name("newbook100")
-                .description("newbook100")
-                .link("newbook100")
-                .build();
+                                          .name("newbook100")
+                                          .description("newbook100")
+                                          .link("newbook100")
+                                          .build();
 
-        CreateMaterialDto dto = new CreateMaterialDto(material.getName(), material.getDescription(), material.getLink());
+        CreateMaterialDto dto = new CreateMaterialDto(material.getName(), material.getDescription(),
+                material.getLink());
 
         //Act
         ErrorDto responce = webTestClient.post()
-                .uri("materials/100/update")
-                .contentType(APPLICATION_JSON)
-                .bodyValue(dto)
-                .exchange()
-                .expectStatus()
-                .isNotFound()
-                .expectBody(ErrorDto.class)
-                .returnResult()
-                .getResponseBody();
+                                         .uri("materials/100/update")
+                                         .contentType(APPLICATION_JSON)
+                                         .bodyValue(dto)
+                                         .exchange()
+                                         .expectStatus()
+                                         .isNotFound()
+                                         .expectBody(ErrorDto.class)
+                                         .returnResult()
+                                         .getResponseBody();
 
         //Assert
         ErrorDto expectedDto = ErrorDto.builder()
-                .errorMessage("Материал не найден.")
-                .build();
+                                       .errorMessage("Материал не найден.")
+                                       .build();
 
         assertions.assertThat(responce)
-                .usingRecursiveComparison()
-                .withStrictTypeChecking()
-                .isEqualTo(expectedDto);
+                  .usingRecursiveComparison()
+                  .withStrictTypeChecking()
+                  .isEqualTo(expectedDto);
     }
 
     @Test
@@ -196,26 +199,26 @@ class StorageControllerIT {
 
         //Act
         MaterialDto responce = webTestClient.get()
-                .uri("materials/1")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody(MaterialDto.class)
-                .returnResult()
-                .getResponseBody();
+                                            .uri("materials/1")
+                                            .exchange()
+                                            .expectStatus()
+                                            .isOk()
+                                            .expectBody(MaterialDto.class)
+                                            .returnResult()
+                                            .getResponseBody();
 
         //Assert
         MaterialDto expectedDto = MaterialDto.builder()
-                .id(1L)
-                .name("Testbook1")
-                .description("book1")
-                .link("book1")
-                .build();
+                                             .id(1L)
+                                             .name("Testbook1")
+                                             .description("book1")
+                                             .link("book1")
+                                             .build();
 
         assertions.assertThat(responce)
-                .usingRecursiveComparison()
-                .withStrictTypeChecking()
-                .isEqualTo(expectedDto);
+                  .usingRecursiveComparison()
+                  .withStrictTypeChecking()
+                  .isEqualTo(expectedDto);
     }
 
     @Test
@@ -224,23 +227,23 @@ class StorageControllerIT {
 
         //Act
         ErrorDto responce = webTestClient.get()
-                .uri("materials/100")
-                .exchange()
-                .expectStatus()
-                .isNotFound()
-                .expectBody(ErrorDto.class)
-                .returnResult()
-                .getResponseBody();
+                                         .uri("materials/100")
+                                         .exchange()
+                                         .expectStatus()
+                                         .isNotFound()
+                                         .expectBody(ErrorDto.class)
+                                         .returnResult()
+                                         .getResponseBody();
 
         //Assert
         ErrorDto expectedDto = ErrorDto.builder()
-                .errorMessage("Материал не найден.")
-                .build();
+                                       .errorMessage("Материал не найден.")
+                                       .build();
 
         assertions.assertThat(responce)
-                .usingRecursiveComparison()
-                .withStrictTypeChecking()
-                .isEqualTo(expectedDto);
+                  .usingRecursiveComparison()
+                  .withStrictTypeChecking()
+                  .isEqualTo(expectedDto);
     }
 
     @Test
@@ -249,39 +252,39 @@ class StorageControllerIT {
 
         //Act
         List<MaterialDto> responce = webTestClient.get()
-                .uri("materials/search/?partOfName=Testbook")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBodyList(MaterialDto.class)
-                .returnResult()
-                .getResponseBody();
+                                                  .uri("materials/search/?partOfName=Testbook")
+                                                  .exchange()
+                                                  .expectStatus()
+                                                  .isOk()
+                                                  .expectBodyList(MaterialDto.class)
+                                                  .returnResult()
+                                                  .getResponseBody();
 
         //Assert
         List<MaterialDto> expectedDto = new ArrayList<>();
         expectedDto.add(MaterialDto.builder()
-                .id(1L)
-                .name("Testbook1")
-                .description("book1")
-                .link("book1")
-                .build());
+                                   .id(1L)
+                                   .name("Testbook1")
+                                   .description("book1")
+                                   .link("book1")
+                                   .build());
         expectedDto.add(MaterialDto.builder()
-                .id(2L)
-                .name("Testbook2")
-                .description("book2")
-                .link("book2")
-                .build());
+                                   .id(2L)
+                                   .name("Testbook2")
+                                   .description("book2")
+                                   .link("book2")
+                                   .build());
         expectedDto.add(MaterialDto.builder()
-                .id(3L)
-                .name("Testbook3")
-                .description("book3")
-                .link("book3")
-                .build());
+                                   .id(3L)
+                                   .name("Testbook3")
+                                   .description("book3")
+                                   .link("book3")
+                                   .build());
 
         assertions.assertThat(responce)
-                .usingRecursiveComparison()
-                .withStrictTypeChecking()
-                .isEqualTo(expectedDto);
+                  .usingRecursiveComparison()
+                  .withStrictTypeChecking()
+                  .isEqualTo(expectedDto);
     }
 
     @Test
@@ -290,25 +293,25 @@ class StorageControllerIT {
 
         //Act
         List<ErrorDto> responce = webTestClient.get()
-                .uri("materials/search/?partOfName=Testbook100")
-                .exchange()
-                .expectStatus()
-                .isNotFound()
-                .expectBodyList(ErrorDto.class)
-                .returnResult()
-                .getResponseBody();
+                                               .uri("materials/search/?partOfName=Testbook100")
+                                               .exchange()
+                                               .expectStatus()
+                                               .isNotFound()
+                                               .expectBodyList(ErrorDto.class)
+                                               .returnResult()
+                                               .getResponseBody();
 
         //Assert
         List<ErrorDto> expectedDto = new ArrayList<>();
         expectedDto.add(ErrorDto.builder()
-                .errorMessage("Материал не найден.")
-                .build());
+                                .errorMessage("Материал не найден.")
+                                .build());
 
 
         assertions.assertThat(responce)
-                .usingRecursiveComparison()
-                .withStrictTypeChecking()
-                .isEqualTo(expectedDto);
+                  .usingRecursiveComparison()
+                  .withStrictTypeChecking()
+                  .isEqualTo(expectedDto);
     }
 
 

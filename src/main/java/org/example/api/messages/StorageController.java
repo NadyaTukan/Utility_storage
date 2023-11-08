@@ -37,9 +37,9 @@ public class StorageController {
 
     @PostMapping("{id}/update")
     @Operation(description = "Изменить запись по ID")
-    public void updateByID(@PathVariable("id") Long id, @RequestBody UpdateMaterialDto dto) {
+    public MaterialDto updateByID(@PathVariable("id") Long id, @RequestBody UpdateMaterialDto dto) {
         UpdateMaterialArgument argument = mapper.toUpdateArgument(dto);
-        mapper.toDto(storageService.updateByID(id, argument));
+        return mapper.toDto(storageService.updateByID(id, argument));
     }
 
     @GetMapping("{id}")
