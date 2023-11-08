@@ -1,7 +1,6 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.api.messages.dto.UpdateMaterialDto;
 import org.example.exception.NotFoundException;
 import org.example.exception.NullPointerException;
 import org.example.model.UsefulMaterial;
@@ -25,11 +24,11 @@ public class StorageServiceImpl implements StorageService {
     public UsefulMaterial create(CreateMaterialArgument argument) {
         long id = storage.getNextId();
         return storage.create(UsefulMaterial.builder()
-                                            .id(id)
-                                            .name(argument.getName())
-                                            .description(argument.getDescription())
-                                            .link(argument.getLink())
-                                            .build());
+                .id(id)
+                .name(argument.getName())
+                .description(argument.getDescription())
+                .link(argument.getLink())
+                .build());
     }
 
     @Override
@@ -41,11 +40,11 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public UsefulMaterial updateByID(Long id, UpdateMaterialArgument argument) {
         Optional.ofNullable(storage.update(id, UsefulMaterial.builder()
-                                                                    .id(id)
-                                                                    .name(argument.getName())
-                                                                    .description(argument.getDescription())
-                                                                    .link(argument.getLink())
-                                                                    .build()))
+                        .id(id)
+                        .name(argument.getName())
+                        .description(argument.getDescription())
+                        .link(argument.getLink())
+                        .build()))
                 .orElseThrow(() -> new NullPointerException("Материал не найден."));
         return null;
     }

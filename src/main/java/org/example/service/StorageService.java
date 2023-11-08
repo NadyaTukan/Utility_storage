@@ -1,6 +1,5 @@
 package org.example.service;
 
-import org.example.api.messages.dto.UpdateMaterialDto;
 import org.example.model.UsefulMaterial;
 import org.example.service.argument.CreateMaterialArgument;
 import org.example.service.argument.UpdateMaterialArgument;

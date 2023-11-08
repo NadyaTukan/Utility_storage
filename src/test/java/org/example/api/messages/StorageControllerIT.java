@@ -5,9 +5,7 @@ import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.example.api.ErrorDto;
 import org.example.api.messages.dto.CreateMaterialDto;
 import org.example.api.messages.dto.MaterialDto;
-import org.example.api.messages.dto.UpdateMaterialDto;
 import org.example.api.messages.mapper.MaterialMapper;
-import org.example.model.UsefulMaterial;
 import org.example.storage.Storage;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -129,8 +127,8 @@ class StorageControllerIT {
                 .build();
 
         CreateMaterialDto dto = new CreateMaterialDto(material.getName(),
-                                                    material.getDescription(),
-                                                    material.getLink());
+                material.getDescription(),
+                material.getLink());
 
         //Act
         webTestClient.post()
