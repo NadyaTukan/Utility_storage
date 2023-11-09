@@ -1,6 +1,8 @@
-import org.example.Reader;
-import org.example.Storage;
-import org.example.UsefulMaterial;
+package org.example;
+
+import org.example.model.UsefulMaterial;
+import org.example.reader.Reader;
+import org.example.storage.Storage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -11,7 +13,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class StorageTest {
 
@@ -19,7 +22,7 @@ public class StorageTest {
     Resource stateFile = new ClassPathResource("dataTest.json");
 
     @BeforeEach
-    public void createNewStorage() throws IOException {
+    public void setUp() throws IOException {
         File testFile = stateFile.getFile();
         storage = new Storage(testFile.getPath());
         storage.init();
@@ -28,7 +31,7 @@ public class StorageTest {
     @Test
     void addInStorage() throws IOException {
         //Arrange
-        Map<Integer, UsefulMaterial> materialsTest = Reader.read(stateFile.getFile().getPath());
+        Map<Long, UsefulMaterial> materialsTest = Reader.read(stateFile.getFile().getPath());
 
         //Act
         Storage storageExpect = new Storage(stateFile.getFile().getPath());
@@ -41,16 +44,16 @@ public class StorageTest {
     @Test
     void searchByIDWithNonZeroResultsTest() {
         //Act
-        var resultExistingID = storage.searchByID(1);
+        var resultExistingID = storage.searchByID(1L);
 
         //Assert
-        assertEquals(resultExistingID, storage.getMaterials().get(1).toString());
+        assertEquals(resultExistingID, storage.getMaterials().get(1L));
     }
 
     @Test
     void searchByIDWithZeroResultsTest() {
         //Act
-        var resultUnExistingID = storage.searchByID(100);
+        var resultUnExistingID = storage.searchByID(100L);
 
         //Assert
         assertNull(resultUnExistingID);
@@ -60,9 +63,24 @@ public class StorageTest {
     void searchByPartOfNameWithNonZeroResultsTest() {
         //Arrange
         ArrayList<UsefulMaterial> expectList = new ArrayList<>();
-        expectList.add(new UsefulMaterial(1, "Testbook1", "book1", "book1"));
-        expectList.add(new UsefulMaterial(2, "Testbook2", "book2", "book2"));
-        expectList.add(new UsefulMaterial(3, "Testbook3", "book3", "book3"));
+        expectList.add(UsefulMaterial.builder()
+                                     .id(1L)
+                                     .name("Testbook1")
+                                     .description("book1")
+                                     .link("book1")
+                                     .build());
+        expectList.add(UsefulMaterial.builder()
+                                     .id(2L)
+                                     .name("Testbook2")
+                                     .description("book2")
+                                     .link("book2")
+                                     .build());
+        expectList.add(UsefulMaterial.builder()
+                                     .id(3L)
+                                     .name("Testbook3")
+                                     .description("book3")
+                                     .link("book3")
+                                     .build());
 
         //Act
         var resultPartOfNameExisting = storage.searchByPartOfName("Test");
@@ -77,6 +95,6 @@ public class StorageTest {
         var resultPartOfNameUnExisting = storage.searchByPartOfName("book8");
 
         //Assert
-        assertTrue(resultPartOfNameUnExisting.isEmpty());
+        assertNull(resultPartOfNameUnExisting);
     }
 }

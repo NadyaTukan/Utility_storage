@@ -1,15 +1,15 @@
-package org.example;
+package org.example.model;
 
 import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-
 public class UsefulMaterial {
-    private int id;
+    private long id;
     private String name;
     private String description;
     private String link;
