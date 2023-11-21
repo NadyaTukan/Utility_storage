@@ -1,8 +1,8 @@
-package org.example.service;
+package org.example.service.storade;
 
 import org.example.model.UsefulMaterial;
-import org.example.service.argument.CreateMaterialArgument;
-import org.example.service.argument.UpdateMaterialArgument;
+import org.example.service.storade.argument.CreateMaterialArgument;
+import org.example.service.storade.argument.UpdateMaterialArgument;
 
 import java.util.List;
 

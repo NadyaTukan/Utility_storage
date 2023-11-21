@@ -1,15 +1,15 @@
-package org.example.api.messages;
+package org.example.api.storage;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.example.api.messages.dto.CreateMaterialDto;
-import org.example.api.messages.dto.MaterialDto;
-import org.example.api.messages.dto.UpdateMaterialDto;
-import org.example.api.messages.mapper.MaterialMapper;
+import org.example.api.storage.dto.CreateMaterialDto;
+import org.example.api.storage.dto.MaterialDto;
+import org.example.api.storage.dto.UpdateMaterialDto;
+import org.example.api.storage.mapper.MaterialMapper;
 import org.example.model.UsefulMaterial;
-import org.example.service.StorageService;
-import org.example.service.argument.CreateMaterialArgument;
-import org.example.service.argument.UpdateMaterialArgument;
+import org.example.service.storade.StorageService;
+import org.example.service.storade.argument.CreateMaterialArgument;
+import org.example.service.storade.argument.UpdateMaterialArgument;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

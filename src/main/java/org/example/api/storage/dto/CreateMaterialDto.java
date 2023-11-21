@@ -1,4 +1,4 @@
-package org.example.api.messages.dto;
+package org.example.api.storage.dto;
 
 import lombok.*;
 

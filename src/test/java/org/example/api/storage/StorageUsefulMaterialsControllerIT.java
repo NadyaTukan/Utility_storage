@@ -1,12 +1,12 @@
-package org.example.api.messages;
+package org.example.api.storage;
 
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.example.api.ErrorDto;
-import org.example.api.messages.dto.CreateMaterialDto;
-import org.example.api.messages.dto.MaterialDto;
-import org.example.api.messages.mapper.MaterialMapper;
-import org.example.storage.Storage;
+import org.example.api.storage.dto.CreateMaterialDto;
+import org.example.api.storage.dto.MaterialDto;
+import org.example.api.storage.mapper.MaterialMapper;
+import org.example.repository.StorageUsefulMaterials;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -28,12 +28,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @AutoConfigureWebTestClient
 @ExtendWith(SoftAssertionsExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class StorageControllerIT {
+class StorageUsefulMaterialsControllerIT {
     @Autowired
     private WebTestClient webTestClient;
 
     @Autowired
-    private Storage storage;
+    private StorageUsefulMaterials storageUsefulMaterials;
 
     @Autowired
     private MaterialMapper mapper;
@@ -89,7 +89,7 @@ class StorageControllerIT {
                      .isOk();
 
         //Assert
-        assertions.assertThat(storage.searchByID(6L)).isEqualTo(null);
+        assertions.assertThat(storageUsefulMaterials.searchByID(6L)).isEqualTo(null);
     }
 
     @Test

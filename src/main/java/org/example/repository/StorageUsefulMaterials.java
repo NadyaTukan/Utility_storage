@@ -1,11 +1,11 @@
-package org.example.storage;
+package org.example.repository;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NonNull;
+import org.example.action.reader.Reader;
 import org.example.model.UsefulMaterial;
-import org.example.reader.Reader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,13 +15,13 @@ import java.util.Map;
 
 @Getter
 @Component
-public class Storage {
+public class StorageUsefulMaterials {
 
     private final Map<Long, UsefulMaterial> materials = new HashMap<>();
     private final String pathToData;
     private Long nextId = 0L;
 
-    public Storage(@Value("${data.name}") String pathToData) {
+    public StorageUsefulMaterials(@Value("${data.name}") String pathToData) {
         this.pathToData = pathToData;
     }
 

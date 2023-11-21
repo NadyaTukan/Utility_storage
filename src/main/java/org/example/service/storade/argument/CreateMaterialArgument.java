@@ -1,4 +1,4 @@
-package org.example.service.argument;
+package org.example.service.storade.argument;
 
 import lombok.Builder;
 import lombok.Value;
