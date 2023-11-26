@@ -10,5 +10,5 @@ public interface GradeService {
 
     void deleteById(Long id);
 
-    List<Grade> searchById(Long id);
+    List<Grade> searchByUsefulMaterialId(Long id);
 }

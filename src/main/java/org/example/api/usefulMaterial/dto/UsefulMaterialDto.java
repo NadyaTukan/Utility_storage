@@ -1,4 +1,4 @@
-package org.example.api.storage.dto;
+package org.example.api.usefulMaterial.dto;
 
 import lombok.*;
 
@@ -8,7 +8,7 @@ import lombok.*;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class MaterialDto {
+public class UsefulMaterialDto {
     Long id;
     String name;
     String description;

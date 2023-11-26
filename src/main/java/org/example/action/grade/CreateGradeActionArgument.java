@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class CreateGradeActionArgument {
     @NotNull(message = "не указан id записи")
-    long idUsefulMaterial;
+    long usefulMaterialId;
     @Min(value = 1, message = "оценка не должна быть меньше 1")
     @Max(value = 5, message = "оценка не должна быть больше 5")
     int grade;

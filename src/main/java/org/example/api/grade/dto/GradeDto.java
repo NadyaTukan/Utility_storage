@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 public class GradeDto {
     long id;
-    long idUsefulMaterial;
+    long usefulMaterialId;
     int grade;
     String comment;
 }

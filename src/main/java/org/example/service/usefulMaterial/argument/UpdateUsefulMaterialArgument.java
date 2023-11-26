@@ -1,12 +1,13 @@
-package org.example.service.storade.argument;
+package org.example.service.usefulMaterial.argument;
 
 import lombok.Builder;
 import lombok.Value;
 
 @Value
 @Builder
-public class CreateMaterialArgument {
+public class UpdateUsefulMaterialArgument {
     String name;
     String description;
     String link;
 }
+

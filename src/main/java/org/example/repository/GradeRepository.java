@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Getter
 @Component
-public class StorageGrades {
+public class GradeRepository {
     private final Map<Long, Grade> grades = new HashMap<>();
     private Long nextId = 0L;
 
@@ -26,10 +26,10 @@ public class StorageGrades {
         return grades.remove(id);
     }
 
-    public List<Grade> searchById(@NotBlank Long id) {
+    public List<Grade> searchByUsefulMaterialId(@NotBlank Long id) {
         List<Grade> results = grades.values()
                                     .stream()
-                                    .filter(grade -> grade.getIdUsefulMaterial() == id)
+                                    .filter(grade -> grade.getUsefulMaterialId() == id)
                                     .toList();
         if (!results.isEmpty()) {
             return results;
