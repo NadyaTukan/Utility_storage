@@ -19,9 +19,7 @@ public class GradeServiceImpl implements GradeService {
 
     @Override
     public Grade create(CreateGradeArgument argument) {
-        long id = gradeRepository.getNextId();
         return gradeRepository.create(Grade.builder()
-                                           .id(id)
                                            .usefulMaterialId(argument.getUsefulMaterialId())
                                            .grade(argument.getGrade())
                                            .comment(argument.getComment())

@@ -16,12 +16,8 @@ public class FillStorageUsefulMaterialsRunner implements CommandLineRunner {
 
     private final UsefulMaterialRepository usefulMaterialRepository;
 
-    public void create() {
-        usefulMaterialRepository.putAllInUsefulMaterials(Reader.read(pathToData));
-    }
-
     @Override
     public void run(String... args) throws Exception {
-        create();
+        usefulMaterialRepository.putAll(Reader.read(pathToData));
     }
 }

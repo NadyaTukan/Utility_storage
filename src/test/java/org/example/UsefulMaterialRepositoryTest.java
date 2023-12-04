@@ -1,8 +1,8 @@
 package org.example;
 
+import org.example.action.reader.Reader;
 import org.example.action.usefulMaterial.FillStorageUsefulMaterialsRunner;
 import org.example.model.UsefulMaterial;
-import org.example.action.reader.Reader;
 import org.example.repository.UsefulMaterialRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ public class UsefulMaterialRepositoryTest {
     public void setUp() throws IOException {
         File testFile = stateFile.getFile();
         usefulMaterialRepository = new UsefulMaterialRepository();
-        usefulMaterialRepository.putAllInUsefulMaterials(Reader.read(stateFile.getFile().getPath()));
+        usefulMaterialRepository.putAll(Reader.read(stateFile.getFile().getPath()));
     }
 
     @Test
@@ -37,7 +37,7 @@ public class UsefulMaterialRepositoryTest {
 
         //Act
         UsefulMaterialRepository usefulMaterialRepositoryExpect = new UsefulMaterialRepository();
-        usefulMaterialRepositoryExpect.putAllInUsefulMaterials(Reader.read(stateFile.getFile().getPath()));
+        usefulMaterialRepositoryExpect.putAll(Reader.read(stateFile.getFile().getPath()));
 
         //Assert
         assertEquals(materialsTest, usefulMaterialRepositoryExpect.getUsefulMaterials());

@@ -4,8 +4,8 @@ import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.example.api.ErrorDto;
 import org.example.api.usefulMaterial.dto.CreateUsefulMaterialDto;
+import org.example.api.usefulMaterial.dto.UpdateUsefulMaterialDto;
 import org.example.api.usefulMaterial.dto.UsefulMaterialDto;
-import org.example.api.usefulMaterial.mapper.UsefulMaterialMapper;
 import org.example.model.UsefulMaterial;
 import org.example.repository.UsefulMaterialRepository;
 import org.junit.jupiter.api.*;
@@ -27,58 +27,37 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @ExtendWith(SoftAssertionsExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class UsefulMaterialRepositoryControllerIT {
+class UsefulMaterialControllerIT {
     @Autowired
     private WebTestClient webTestClient;
 
     @Autowired
     private UsefulMaterialRepository usefulMaterialRepository;
 
-    @Autowired
-    private UsefulMaterialMapper mapper;
-
-    UsefulMaterial usefulMaterialForPostCreate;
-    UsefulMaterial usefulMaterialForDeleteDelete;
-    UsefulMaterial usefulMaterialForPostUpdateByID;
-    UsefulMaterial usefulMaterialForGetByID;
-
-
-    @BeforeAll
-    void init() {
-        usefulMaterialForPostCreate = UsefulMaterial.builder()
-                                                    .name("bookForPostCreate")
-                                                    .description("book")
-                                                    .link("book")
-                                                    .build();
-
-        usefulMaterialForDeleteDelete = usefulMaterialRepository.create(UsefulMaterial.builder()
-                                                                                      .name("bookForDeleteDelete")
-                                                                                      .description("book")
-                                                                                      .link("book")
-                                                                                      .build());
-
-        usefulMaterialForPostUpdateByID = usefulMaterialRepository.create(UsefulMaterial.builder()
-                                                                                        .name("bookForPostUpdateByID")
-                                                                                        .description("book")
-                                                                                        .link("book")
-                                                                                        .build());
+    @BeforeEach
+    void beforeEach() {
+        usefulMaterialRepository.clear();
 
     }
 
     @Test
     void postCreate(SoftAssertions assertions) {
         //Arrange
-        UsefulMaterialDto material = mapper.toDto(usefulMaterialForPostCreate);
+        UsefulMaterialDto usefulMaterialDto = UsefulMaterialDto.builder()
+                                                               .name("bookForPostCreate")
+                                                               .description("book")
+                                                               .link("book")
+                                                               .build();
 
-        CreateUsefulMaterialDto dto = new CreateUsefulMaterialDto(material.getName(),
-                material.getDescription(),
-                material.getLink());
+        CreateUsefulMaterialDto createUsefulMaterialDto = new CreateUsefulMaterialDto(usefulMaterialDto.getName(),
+                usefulMaterialDto.getDescription(),
+                usefulMaterialDto.getLink());
 
         //Act
-        UsefulMaterialDto responce = webTestClient.post()
+        UsefulMaterialDto response = webTestClient.post()
                                                   .uri("materials/create")
                                                   .contentType(APPLICATION_JSON)
-                                                  .bodyValue(dto)
+                                                  .bodyValue(createUsefulMaterialDto)
                                                   .exchange()
                                                   .expectStatus()
                                                   .isOk()
@@ -88,13 +67,13 @@ class UsefulMaterialRepositoryControllerIT {
 
         //Assert
         UsefulMaterialDto expectedDto = UsefulMaterialDto.builder()
-                                                         .id(8L)
+                                                         .id(1L)
                                                          .name("bookForPostCreate")
                                                          .description("book")
                                                          .link("book")
                                                          .build();
 
-        assertions.assertThat(responce)
+        assertions.assertThat(response)
                   .usingRecursiveComparison()
                   .withStrictTypeChecking()
                   .isEqualTo(expectedDto);
@@ -102,23 +81,28 @@ class UsefulMaterialRepositoryControllerIT {
 
     @Test
     void deleteDeleteIsOk(SoftAssertions assertions) {
-
+        //Arrange
+        usefulMaterialRepository.create(UsefulMaterial.builder()
+                                                      .name("bookForDeleteDelete")
+                                                      .description("book")
+                                                      .link("book")
+                                                      .build());
         //Act
         webTestClient.delete()
-                     .uri("materials/6")
+                     .uri("materials/1")
                      .exchange()
                      .expectStatus()
                      .isOk();
 
         //Assert
-        assertions.assertThat(usefulMaterialRepository.searchByID(6L)).isEqualTo(null);
+        assertions.assertThat(usefulMaterialRepository.searchByID(1L)).isEqualTo(null);
     }
 
     @Test
     void deleteDeleteNotFound(SoftAssertions assertions) {
 
         //Act
-        ErrorDto responce = webTestClient.delete()
+        ErrorDto response = webTestClient.delete()
                                          .uri("materials/100")
                                          .exchange()
                                          .expectStatus()
@@ -132,7 +116,7 @@ class UsefulMaterialRepositoryControllerIT {
                                        .errorMessage("Материал не найден.")
                                        .build();
 
-        assertions.assertThat(responce)
+        assertions.assertThat(response)
                   .usingRecursiveComparison()
                   .withStrictTypeChecking()
                   .isEqualTo(expectedDto);
@@ -141,17 +125,21 @@ class UsefulMaterialRepositoryControllerIT {
     @Test
     void postUpdateByIDIsOk(SoftAssertions assertions) {
         //Arrange
-        UsefulMaterialDto material = mapper.toDto(usefulMaterialForPostUpdateByID);
+        UsefulMaterial usefulMaterial = usefulMaterialRepository.create(UsefulMaterial.builder()
+                                                                                      .name("bookForPostUpdateByID")
+                                                                                      .description("book")
+                                                                                      .link("book")
+                                                                                      .build());
 
-        CreateUsefulMaterialDto dto = new CreateUsefulMaterialDto(material.getName(),
-                material.getDescription(),
-                material.getLink());
+        UpdateUsefulMaterialDto createUsefulMaterialDto = new UpdateUsefulMaterialDto(usefulMaterial.getName(),
+                usefulMaterial.getDescription(),
+                usefulMaterial.getLink());
 
         //Act
-        UsefulMaterialDto responce = webTestClient.post()
-                                                  .uri("materials/7/update")
+        UsefulMaterialDto response = webTestClient.post()
+                                                  .uri("materials/1/update")
                                                   .contentType(APPLICATION_JSON)
-                                                  .bodyValue(dto)
+                                                  .bodyValue(createUsefulMaterialDto)
                                                   .exchange()
                                                   .expectStatus()
                                                   .isOk()
@@ -161,13 +149,13 @@ class UsefulMaterialRepositoryControllerIT {
 
         //Assert
         UsefulMaterialDto expectedDto = UsefulMaterialDto.builder()
-                                                         .id(7L)
+                                                         .id(1L)
                                                          .name("bookForPostUpdateByID")
                                                          .description("book")
                                                          .link("book")
                                                          .build();
 
-        assertions.assertThat(responce)
+        assertions.assertThat(response)
                   .usingRecursiveComparison()
                   .withStrictTypeChecking()
                   .isEqualTo(expectedDto);
@@ -176,20 +164,21 @@ class UsefulMaterialRepositoryControllerIT {
     @Test
     void postUpdateByIDNotFound(SoftAssertions assertions) {
         //Arrange
-        UsefulMaterialDto material = UsefulMaterialDto.builder()
-                                                      .name("newbook100")
-                                                      .description("newbook100")
-                                                      .link("newbook100")
-                                                      .build();
+        UsefulMaterialDto usefulMaterialDto = UsefulMaterialDto.builder()
+                                                               .name("newbook100")
+                                                               .description("newbook100")
+                                                               .link("newbook100")
+                                                               .build();
 
-        CreateUsefulMaterialDto dto = new CreateUsefulMaterialDto(material.getName(), material.getDescription(),
-                material.getLink());
+        UpdateUsefulMaterialDto createUsefulMaterialDto = new UpdateUsefulMaterialDto(usefulMaterialDto.getName(),
+                usefulMaterialDto.getDescription(),
+                usefulMaterialDto.getLink());
 
         //Act
-        ErrorDto responce = webTestClient.post()
+        ErrorDto response = webTestClient.post()
                                          .uri("materials/100/update")
                                          .contentType(APPLICATION_JSON)
-                                         .bodyValue(dto)
+                                         .bodyValue(createUsefulMaterialDto)
                                          .exchange()
                                          .expectStatus()
                                          .isNotFound()
@@ -202,7 +191,7 @@ class UsefulMaterialRepositoryControllerIT {
                                        .errorMessage("Материал не найден.")
                                        .build();
 
-        assertions.assertThat(responce)
+        assertions.assertThat(response)
                   .usingRecursiveComparison()
                   .withStrictTypeChecking()
                   .isEqualTo(expectedDto);
@@ -210,9 +199,16 @@ class UsefulMaterialRepositoryControllerIT {
 
     @Test
     void getByIDIsOk(SoftAssertions assertions) {
+        //Arrange
+        usefulMaterialRepository.create(UsefulMaterial.builder()
+                                                      .name("bookForGetByID")
+                                                      .description("book")
+                                                      .link("book")
+                                                      .build());
+
 
         //Act
-        UsefulMaterialDto responce = webTestClient.get()
+        UsefulMaterialDto response = webTestClient.get()
                                                   .uri("materials/1")
                                                   .exchange()
                                                   .expectStatus()
@@ -224,12 +220,12 @@ class UsefulMaterialRepositoryControllerIT {
         //Assert
         UsefulMaterialDto expectedDto = UsefulMaterialDto.builder()
                                                          .id(1L)
-                                                         .name("Testbook1")
-                                                         .description("book1")
-                                                         .link("book1")
+                                                         .name("bookForGetByID")
+                                                         .description("book")
+                                                         .link("book")
                                                          .build();
 
-        assertions.assertThat(responce)
+        assertions.assertThat(response)
                   .usingRecursiveComparison()
                   .withStrictTypeChecking()
                   .isEqualTo(expectedDto);
@@ -239,7 +235,7 @@ class UsefulMaterialRepositoryControllerIT {
     void getByIDNotFound(SoftAssertions assertions) {
 
         //Act
-        ErrorDto responce = webTestClient.get()
+        ErrorDto response = webTestClient.get()
                                          .uri("materials/100")
                                          .exchange()
                                          .expectStatus()
@@ -253,7 +249,7 @@ class UsefulMaterialRepositoryControllerIT {
                                        .errorMessage("Материал не найден.")
                                        .build();
 
-        assertions.assertThat(responce)
+        assertions.assertThat(response)
                   .usingRecursiveComparison()
                   .withStrictTypeChecking()
                   .isEqualTo(expectedDto);
@@ -261,10 +257,29 @@ class UsefulMaterialRepositoryControllerIT {
 
     @Test
     void getSearchIsOk(SoftAssertions assertions) {
+        //Arrange
+        usefulMaterialRepository.create(UsefulMaterial.builder()
+                                                      .name("bookForGetSearch1")
+                                                      .description("book")
+                                                      .link("book")
+                                                      .build());
+
+        usefulMaterialRepository.create(UsefulMaterial.builder()
+                                                      .name("bookForGetSearch2")
+                                                      .description("book")
+                                                      .link("book")
+                                                      .build());
+
+        usefulMaterialRepository.create(UsefulMaterial.builder()
+                                                      .name("bookForGetSearch3")
+                                                      .description("book")
+                                                      .link("book")
+                                                      .build());
+
 
         //Act
-        List<UsefulMaterialDto> responce = webTestClient.get()
-                                                        .uri("materials/search/?partOfName=Testbook")
+        List<UsefulMaterialDto> response = webTestClient.get()
+                                                        .uri("materials/search/?partOfName=bookForGetSearch")
                                                         .exchange()
                                                         .expectStatus()
                                                         .isOk()
@@ -276,24 +291,24 @@ class UsefulMaterialRepositoryControllerIT {
         List<UsefulMaterialDto> expectedDto = new ArrayList<>();
         expectedDto.add(UsefulMaterialDto.builder()
                                          .id(1L)
-                                         .name("Testbook1")
-                                         .description("book1")
-                                         .link("book1")
+                                         .name("bookForGetSearch1")
+                                         .description("book")
+                                         .link("book")
                                          .build());
         expectedDto.add(UsefulMaterialDto.builder()
                                          .id(2L)
-                                         .name("Testbook2")
-                                         .description("book2")
-                                         .link("book2")
+                                         .name("bookForGetSearch2")
+                                         .description("book")
+                                         .link("book")
                                          .build());
         expectedDto.add(UsefulMaterialDto.builder()
                                          .id(3L)
-                                         .name("Testbook3")
-                                         .description("book3")
-                                         .link("book3")
+                                         .name("bookForGetSearch3")
+                                         .description("book")
+                                         .link("book")
                                          .build());
 
-        assertions.assertThat(responce)
+        assertions.assertThat(response)
                   .usingRecursiveComparison()
                   .withStrictTypeChecking()
                   .isEqualTo(expectedDto);
@@ -303,7 +318,7 @@ class UsefulMaterialRepositoryControllerIT {
     void getSearchNotFound(SoftAssertions assertions) {
 
         //Act
-        List<ErrorDto> responce = webTestClient.get()
+        List<ErrorDto> response = webTestClient.get()
                                                .uri("materials/search/?partOfName=Testbook100")
                                                .exchange()
                                                .expectStatus()
@@ -319,7 +334,7 @@ class UsefulMaterialRepositoryControllerIT {
                                 .build());
 
 
-        assertions.assertThat(responce)
+        assertions.assertThat(response)
                   .usingRecursiveComparison()
                   .withStrictTypeChecking()
                   .isEqualTo(expectedDto);

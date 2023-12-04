@@ -18,7 +18,12 @@ public class UsefulMaterialRepository {
     private Long nextId = 0L;
 
 
-    public void putAllInUsefulMaterials(Map<Long, UsefulMaterial> newUsefulMaterials) {
+    public void clear() {
+        this.usefulMaterials.clear();
+        nextId = 0L;
+    }
+
+    public void putAll(Map<Long, UsefulMaterial> newUsefulMaterials) {
         this.usefulMaterials.putAll(newUsefulMaterials);
         nextId = getMaxId();
     }

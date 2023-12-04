@@ -14,7 +14,7 @@ public class CreateGradeAction {
     private final UsefulMaterialService usefulMaterialService;
 
     public Grade create(CreateGradeActionArgument argument) {
-        existsById(argument);
+        usefulMaterialService.existsById(argument);
 
         return gradeService.create(CreateGradeArgument.builder()
                                                       .usefulMaterialId(argument.getUsefulMaterialId())
@@ -23,8 +23,6 @@ public class CreateGradeAction {
                                                       .build());
     }
 
-    private void existsById(CreateGradeActionArgument argument) {
-        usefulMaterialService.searchByID(argument.getUsefulMaterialId());
-    }
+
 
 }

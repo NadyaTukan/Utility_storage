@@ -16,8 +16,17 @@ public class GradeRepository {
     private final Map<Long, Grade> grades = new HashMap<>();
     private Long nextId = 0L;
 
+    public void clear() {
+        this.grades.clear();
+        nextId = 0L;
+    }
+    public void putAll(Map<Long, Grade> newGrades) {
+        this.grades.putAll(newGrades);
+        nextId = getMaxId();
+    }
 
     public Grade create(Grade grade) {
+        grade.setId(getNextId());
         grades.put(grade.getId(), grade);
         return grade;
     }

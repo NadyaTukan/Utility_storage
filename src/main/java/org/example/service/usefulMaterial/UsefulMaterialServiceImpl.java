@@ -1,6 +1,7 @@
 package org.example.service.usefulMaterial;
 
 import lombok.RequiredArgsConstructor;
+import org.example.action.grade.CreateGradeActionArgument;
 import org.example.exception.NotFoundException;
 import org.example.exception.NullPointerException;
 import org.example.model.UsefulMaterial;
@@ -55,5 +56,9 @@ public class UsefulMaterialServiceImpl implements UsefulMaterialService {
     public List<UsefulMaterial> searchByPartOfName(String partOfName) {
         return Optional.ofNullable(usefulMaterialRepository.searchByPartOfName(partOfName))
                        .orElseThrow(() -> new NotFoundException("Материал не найден."));
+    }
+
+    public void existsById(CreateGradeActionArgument argument) {
+        searchByID(argument.getUsefulMaterialId());
     }
 }
