@@ -1,8 +1,9 @@
 package org.example;
 
+import org.example.action.reader.Reader;
+import org.example.action.usefulMaterial.FillStorageUsefulMaterialsRunner;
 import org.example.model.UsefulMaterial;
-import org.example.reader.Reader;
-import org.example.storage.Storage;
+import org.example.repository.UsefulMaterialRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -16,44 +17,45 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class StorageTest {
+public class UsefulMaterialRepositoryTest {
 
-    private Storage storage;
+    private UsefulMaterialRepository usefulMaterialRepository;
+    private FillStorageUsefulMaterialsRunner fillStorageUsefulMaterialsRunner;
     Resource stateFile = new ClassPathResource("dataTest.json");
 
     @BeforeEach
     public void setUp() throws IOException {
         File testFile = stateFile.getFile();
-        storage = new Storage(testFile.getPath());
-        storage.init();
+        usefulMaterialRepository = new UsefulMaterialRepository();
+        usefulMaterialRepository.putAll(Reader.read(stateFile.getFile().getPath()));
     }
 
     @Test
-    void addInStorage() throws IOException {
+    void addInUsefulMaterialRepository() throws IOException {
         //Arrange
         Map<Long, UsefulMaterial> materialsTest = Reader.read(stateFile.getFile().getPath());
 
         //Act
-        Storage storageExpect = new Storage(stateFile.getFile().getPath());
-        storageExpect.init();
+        UsefulMaterialRepository usefulMaterialRepositoryExpect = new UsefulMaterialRepository();
+        usefulMaterialRepositoryExpect.putAll(Reader.read(stateFile.getFile().getPath()));
 
         //Assert
-        assertEquals(materialsTest, storageExpect.getMaterials());
+        assertEquals(materialsTest, usefulMaterialRepositoryExpect.getUsefulMaterials());
     }
 
     @Test
     void searchByIDWithNonZeroResultsTest() {
         //Act
-        var resultExistingID = storage.searchByID(1L);
+        var resultExistingID = usefulMaterialRepository.searchByID(1L);
 
         //Assert
-        assertEquals(resultExistingID, storage.getMaterials().get(1L));
+        assertEquals(resultExistingID, usefulMaterialRepository.getUsefulMaterials().get(1L));
     }
 
     @Test
     void searchByIDWithZeroResultsTest() {
         //Act
-        var resultUnExistingID = storage.searchByID(100L);
+        var resultUnExistingID = usefulMaterialRepository.searchByID(100L);
 
         //Assert
         assertNull(resultUnExistingID);
@@ -83,7 +85,7 @@ public class StorageTest {
                                      .build());
 
         //Act
-        var resultPartOfNameExisting = storage.searchByPartOfName("Test");
+        var resultPartOfNameExisting = usefulMaterialRepository.searchByPartOfName("Test");
 
         //Assert
         assertEquals(expectList, resultPartOfNameExisting);
@@ -92,7 +94,7 @@ public class StorageTest {
     @Test
     void searchByPartOfNameWithZeroResultsTest() {
         //Act
-        var resultPartOfNameUnExisting = storage.searchByPartOfName("book8");
+        var resultPartOfNameUnExisting = usefulMaterialRepository.searchByPartOfName("book8");
 
         //Assert
         assertNull(resultPartOfNameUnExisting);
